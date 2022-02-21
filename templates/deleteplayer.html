@@ -1,0 +1,135 @@
+{% extends 'layout.html' %}
+
+{% block title %}Delete Player{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: BaseURL + 'playersreport',
+                async: false,
+                dataType: "JSON", // data type expected from server
+                success: function (data) {
+                    var players = data;
+                    var i = 0;
+                    while (i < players.length) {
+                        var player = players[i];
+                        $("#playerlist").append(
+                            "<option value='" + player.PlayerID + "'>" +
+                            player.LastName + " " + player.FirstName +
+                            "</option>"
+                        );
+
+                        i = i + 1;
+                    }
+                    ////change player info
+                },
+                error: function (err) {
+                    console.log('Error: ' + err);
+                    alert("You cannot connect server, please contact network administrator.");
+
+                }
+            });
+
+            $("#playerlist").change(function () {
+                var playerToBeDeleted = $("#playerlist").val();
+                $.ajax({
+                    type: 'GET',
+                    url: BaseURL + 'searchplayer/' + playerToBeDeleted,
+                    async: false,
+                    dataType: "JSON", // data type expected from server
+                    success: function (data) {
+                        player = data;
+                        console.log(player);
+                        $("#playerID").text(player.PlayerID);
+                        $("#lastname").text(player.LastName);
+                        $("#firstname").text(player.FirstName);
+                        $("#position").text(player.Position);
+                        $("#gamePlayed").text(player.GamesPlayed);
+                        $("#totalPoints").text(player.TotalPoints);
+                    },
+                    error: function (err) {
+                        console.log('Error: ' + err);
+                        alert("Player does not exist.");
+                        $("#inputPlayerID").val("");
+                        $("#playerID").text("");
+                        $("#lastname").text("");
+                        $("#firstname").text("");
+                        $("#position").text("");
+                        $("#gamePlayed").text("");
+                        $("#totalPoints").text("");
+                    }
+                });
+            });
+
+            $("#deleteBtn").click(function () {
+                var playerToBeDeleted = $("#playerlist").val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: BaseURL + 'deleteplayer/' + playerToBeDeleted,
+                    async: false,
+                    dataType: "JSON", // data type expected from server
+                    success: function (data) {
+                        console.log(data);
+                        alert(data);
+                        window.location.reload(true);
+
+                    },
+                    error: function (err) {
+                        console.log('Error: ' + err);
+                        alert("Player does not exist.");
+                    }
+                });
+
+            });
+
+            $("#exitBtn").click(function () {
+                window.location.href = "{{ url_for('home') }}";
+            });
+        });
+    </script>
+
+    <div class="login-box">
+        <div class="login-header">Delete a player</div>
+        <div class="login-body">
+            <form class="form-group" method="post" onsubmit="return false">
+                <lable>Please select a player</lable>
+                <select id="playerlist">
+                    <option value="">-- Please select a player --</option>
+                </select>
+            </form>
+            <div id="playerInfo">
+                <table>
+                    <tr>
+                        <td>Player ID</td>
+                        <td id="playerID"></td>
+                    </tr>
+                    <tr>
+                        <td>Lastname</td>
+                        <td id="lastname"></td>
+                    </tr>
+                    <tr>
+                        <td>Firstname</td>
+                        <td id="firstname"></td>
+                    </tr>
+                    <tr>
+                        <td>Position</td>
+                        <td id="position"></td>
+                    </tr>
+                    <tr>
+                        <td>Gamed Played</td>
+                        <td id="gamePlayed"></td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td id="totalPoints"></td>
+                    </tr>
+                </table>
+                <button id="exitBtn">Close</button>
+                <button id="deleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+
+{% block title %}Add a player{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+
+            $("#exitBtn").click(function () {
+                window.location.href = "{{ url_for('home') }}";
+            });
+
+            $("#addBtn").click(function () {
+                            lastname = $("#lastname").val();
+                            firstname = $("#firstname").val();
+                            position = $("#position").val();
+                            gamePlayed = $("#gamePlayed").val();
+                            totalPoints = $("#totalPoints").val();
+
+                if (isValidName(lastname) && isValidName(firstname)
+                    && isValidPosition(position) && isValidGamesPlayed(gamePlayed)
+                    && isValidPosition(totalPoints)) {
+                    $.ajax({
+                        type: 'POST',
+                        url: BaseURL + 'addplayer',
+                        dataType: "JSON", // data type expected from server
+                        async: false,
+                        data: $('form').serialize(),
+                        success: function (data) {
+                            alert(data);
+                            lastname = $("#lastname").val("");
+                            firstname = $("#firstname").val("");
+                            position = $("#position").val("");
+                            gamePlayed = $("#gamePlayed").val("");
+                            totalPoints = $("#totalPoints").val("");
+                        },
+                        error: function (err) {
+                            alert("Please contact administrator");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <div class="login-box">
+        <div class="login-header">Add a player</div>
+        <div class="login-body">
+            <form class="form-group" method="post" onsubmit="return false">
+                <div id="playerInfo">
+                    <table>
+
+                        <tr>
+                            <td>Lastname</td>
+                            <td><input value="" id="lastname" name="lastname" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Firstname</td>
+                            <td><input value="" id="firstname" name="firstname" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>
+                                <select id="position" name="position">
+                                    <option value="Guard">Guard</option>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Centre">Centre</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gamed Played</td>
+                            <td><input value="" id="gamePlayed" name="gamePlayed" type="number" min="0" max="200"/></td>
+                        </tr>
+                        <tr>
+                            <td>Total Points</td>
+                            <td><input value="" id="totalPoints" name="totalPoints" type="number" min="0" max="2000"/></td>
+                        </tr>
+                    </table>
+                    <button id="exitBtn">Close</button>
+                    <button id="addBtn">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

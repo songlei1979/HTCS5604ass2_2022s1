@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block title %}Search a player{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+            $("#exitBtn").hide();
+            $("#anotherBtn").hide();
+
+            $("#searchBtn").click(function () {
+                var playerID = $("#inputPlayerID").val();
+                $.ajax({
+                    type: 'GET',
+                    url: BaseURL + 'searchplayer/' + playerID,
+                    async: false,
+                    dataType: "JSON", // data type expected from server
+                    success: function (data) {
+                        player = data;
+                        console.log(player);
+                        $("#playerID").text(player.PlayerID);
+                        $("#lastname").text(player.LastName);
+                        $("#firstname").text(player.FirstName);
+                        $("#position").text(player.Position);
+                        $("#gamePlayed").text(player.GamesPlayed);
+                        $("#totalPoints").text(player.TotalPoints);
+                    },
+                    error: function (err) {
+                        console.log('Error: ' + err);
+                        alert("Player does not exist.");
+                        $("#inputPlayerID").val("");
+                        $("#playerID").text("");
+                        $("#lastname").text("");
+                        $("#firstname").text("");
+                        $("#position").text("");
+                        $("#gamePlayed").text("");
+                        $("#totalPoints").text("");
+                    }
+                });
+
+
+                $("#exitBtn").show();
+                $("#anotherBtn").show();
+            });
+            $("#exitBtn").click(function () {
+                window.location.href = "{{ url_for('home') }}";
+            });
+            $("#anotherBtn").click(function () {
+                $("#inputPlayerID").val("");
+                $("#playerID").text("");
+                $("#lastname").text("");
+                $("#firstname").text("");
+                $("#position").text("");
+                $("#gamePlayed").text("");
+                $("#totalPoints").text("");
+            });
+        });
+    </script>
+
+    <div class="login-box">
+        <div class="login-header">Search a player</div>
+        <div class="login-body">
+            <form class="form-group" method="post" onsubmit="return false">
+                <lable>Please enter player ID</lable>
+                <input id="inputPlayerID" name="inputPlayerID" value="" type="Number">
+                <button id="searchBtn">Search</button>
+            </form>
+            <div id="productInfo">
+                <table>
+                    <tr>
+                        <td>Player ID</td>
+                        <td id="playerID"></td>
+                    </tr>
+                    <tr>
+                        <td>Lastname</td>
+                        <td id="lastname"></td>
+                    </tr>
+                    <tr>
+                        <td>Firstname</td>
+                        <td id="firstname"></td>
+                    </tr>
+                    <tr>
+                        <td>Position</td>
+                        <td id="position"></td>
+                    </tr>
+                    <tr>
+                        <td>Gamed Played</td>
+                        <td id="gamePlayed"></td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td id="totalPoints"></td>
+                    </tr>
+                </table>
+                <button id="exitBtn">Close</button>
+                <button id="anotherBtn">Search another player</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

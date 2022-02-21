@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block title %}Players report{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+
+            $("#generateBtn").click(function () {
+                $("#playersReport").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: BaseURL + 'playersreport',
+                    async: false,
+                    dataType: "JSON", // data type expected from server
+                    success: function (data) {
+                        var players = data;
+                        console.log("players");
+                        console.log(players);
+                        var i = 0;
+                        while (i<players.length){
+                            var player = players[i];
+                            $("#playersReport").append("<table>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Player ID</td>" +
+                                    "<td>"+player.PlayerID+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Lastname</td>" +
+                                    "<td>"+player.LastName+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Firstname</td>" +
+                                    "<td>"+player.FirstName+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Position</td>" +
+                                    "<td>"+player.Position+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Gamed Played</td>" +
+                                    "<td>"+player.GamesPlayed+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("<tr>" +
+                                    "<td>Total Points</td>" +
+                                    "<td>"+player.TotalPoints+"</td>" +
+                                    "</tr>");
+                            $("#playersReport").append("</table>");
+                            $("#playersReport").append("<hr>");
+                            i = i+1;
+                        }
+                    },
+                    error: function (err) {
+                        console.log('Error: ' + err);
+                        alert("You cannot generate players report, please contact network administrator.");
+
+                    }
+                });
+            });
+            $("#exitBtn").click(function () {
+                window.location.href = "{{ url_for('home') }}";
+            });
+        });
+    </script>
+
+    <div class="login-box">
+        <div class="login-header">Players Report</div>
+        <button id="generateBtn">Generate Report</button>
+         <button id="exitBtn">Close</button>
+        <div class="login-body">
+            <div id="playersReport">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

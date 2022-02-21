@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1 class="h2">Blockhouse Bay Basketball Club</h1>
+    <div>
+        <p class="nav-item">
+            <a class="nav-link" href="{{ url_for('searchplayerview') }}">
+                <span>Search for a player</span>
+            </a>
+        </p>
+        <p class="nav-item">
+            <a class="nav-link" href="{{ url_for('addplayerview') }}">
+
+                <span>Add a player</span>
+            </a>
+        </p>
+        <p class="nav-item">
+            <a class="nav-link" href="{{ url_for('deleteplayerview') }}">
+
+                <span>Delete a player</span>
+            </a>
+        </p>
+        <p class="nav-item">
+            <a class="nav-link" href="{{ url_for('updateplayerview') }}">
+
+                <span>Update a player</span>
+            </a>
+        </p>
+        <p class="nav-item">
+            <a class="nav-link" href="{{ url_for('playersreportview') }}">
+
+                <span>Display players report</span>
+            </a>
+        </p>
+
+    </div>
+{% endblock %}

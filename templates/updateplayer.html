@@ -1,0 +1,142 @@
+{% extends 'layout.html' %}
+
+{% block title %}Update a player{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: BaseURL + 'playersreport',
+                async: false,
+                dataType: "JSON", // data type expected from server
+                success: function (data) {
+                    var players = data;
+                    var i = 0;
+                    while (i < players.length) {
+                        var player = players[i];
+                        $("#playerlist").append(
+                            "<option value='" + player.PlayerID + "'>" +
+                            player.LastName + " " + player.FirstName +
+                            "</option>"
+                        );
+
+                        i = i + 1;
+                    }
+                    ////change player info
+                },
+                error: function (err) {
+                    console.log('Error: ' + err);
+                    alert("You cannot connect server, please contact network administrator.");
+
+                }
+            });
+
+            $("#playerlist").change(function () {
+                var playerToBeDeleted = $("#playerlist").val();
+                $.ajax({
+                    type: 'GET',
+                    url: BaseURL + 'searchplayer/' + playerToBeDeleted,
+                    async: false,
+                    dataType: "JSON", // data type expected from server
+                    success: function (data) {
+                        player = data;
+                        console.log(player);
+                        $("#lastname").val(player.LastName);
+                        $("#firstname").val(player.FirstName);
+                        $("#position").val(player.Position);
+                        $("#gamePlayed").val(player.GamesPlayed);
+                        $("#totalPoints").val(player.TotalPoints);
+                    },
+                    error: function (err) {
+                        console.log('Error: ' + err);
+                        alert("Player does not exist.");
+                        $("#inputPlayerID").val("");
+                        $("#lastname").val("");
+                        $("#firstname").val("");
+                        $("#position").val("");
+                        $("#gamePlayed").val("");
+                        $("#totalPoints").val("");
+                    }
+                });
+            });
+
+            $("#exitBtn").click(function () {
+                window.location.href = "{{ url_for('home') }}";
+            });
+
+            $("#updateBtn").click(function () {
+                playerID = $("#inputPlayerID").val();
+                lastname = $("#lastname").val();
+                firstname = $("#firstname").val();
+                position = $("#position").val();
+                gamePlayed = $("#gamePlayed").val();
+                totalPoints = $("#totalPoints").val();
+
+                if (isValidName(lastname) && isValidName(firstname)
+                    && isValidPosition(position) && isValidGamesPlayed(gamePlayed)
+                    && isValidPosition(totalPoints)) {
+                    $.ajax({
+                        type: 'POST',
+                        url: BaseURL + 'updateplayer',
+                        dataType: "JSON", // data type expected from server
+                        async: false,
+                        data: $('form').serialize(),
+                        success: function (data) {
+                            alert(data)
+                        },
+                        error: function (err) {
+                            alert("Please contact administrator");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <div class="login-box">
+        <div class="login-header">Update a player</div>
+        <div class="login-body">
+            <form class="form-group" method="post" onsubmit="return false">
+                <lable>Please select a player</lable>
+                <select id="playerlist" name="playerID">
+                    <option value="">-- Please select a player --</option>
+                </select>
+
+                <div id="playerInfo">
+                    <table>
+
+                        <tr>
+                            <td>Lastname</td>
+                            <td><input value="" id="lastname" name="lastname" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Firstname</td>
+                            <td><input value="" id="firstname" name="firstname" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>
+                                <select id="position" name="position">
+                                    <option value="Guard">Guard</option>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Centre">Centre</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gamed Played</td>
+                            <td><input value="" id="gamePlayed" name="gamePlayed" type="number" min="0" max="200"/></td>
+                        </tr>
+                        <tr>
+                            <td>Total Points</td>
+                            <td><input value="" id="totalPoints" name="totalPoints" type="number" min="0" max="2000"/></td>
+                        </tr>
+                    </table>
+                    <button id="exitBtn">Close</button>
+                    <button id="updateBtn">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

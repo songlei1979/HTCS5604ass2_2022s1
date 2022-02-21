@@ -155,7 +155,7 @@ def isValidPosition(position):
 
 
 def isValidInputNumber(number, minNum, maxNum):
-    if minNum < int(number) <= maxNum:
+    if minNum <= int(number) <= maxNum:
         return True
     return False
 
