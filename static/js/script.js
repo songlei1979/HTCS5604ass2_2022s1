@@ -1,6 +1,6 @@
 // BaseURL = "http://127.0.0.1:5000/"
-//BaseURL = "https://htcs5604-2022-s1.herokuapp.com/"
-BaseURL = "https://htcs5604ass2-2023s1.onrender.com/"
+BaseURL = "https://htcs-5604ass2-2022s1.vercel.app/"
+//BaseURL = "https://htcs5604ass2-2023s1.onrender.com/"
 
 function isValidName(name){
     if (name.length === 0 || name.length > 30){
