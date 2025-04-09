@@ -9,10 +9,11 @@ def connectToDB():
     """
     try:
         cnx = mysql.connector.connect(
-            user="4543406_shafquat",
-            password="}U.Y%Luc0aq-FatY",
-            host="fdb1030.awardspace.net",
-            database="4543406_shafquat"
+            user="avnadmin",
+            password="AVNS_B_toWQvKyOTvVPaDIjj",
+            host="mysql-3e37fc69-wairaka-faf7.j.aivencloud.com",
+            database="defaultdb",
+            port=26668
         )
         return cnx
     except:
